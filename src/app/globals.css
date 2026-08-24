@@ -1,0 +1,130 @@
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=switzer@300,400,500,600,700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Switzer', sans-serif;
+  --font-heading: 'Cabinet Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #F8FAFA;
+  --foreground: #082C29;
+  --card: #FFFFFF;
+  --card-foreground: #082C29;
+  --popover: #FFFFFF;
+  --popover-foreground: #082C29;
+  --primary: #12A594;
+  --primary-foreground: #FFFFFF;
+  --secondary: #E4EBEB;
+  --secondary-foreground: #082C29;
+  --muted: #F0F4F4;
+  --muted-foreground: #597471;
+  --accent: #E4EBEB;
+  --accent-foreground: #12A594;
+  --destructive: #E5484D;
+  --destructive-foreground: #FFFFFF;
+  --border: #E4EBEB;
+  --input: #E4EBEB;
+  --ring: #12A594;
+  --chart-1: #12A594;
+  --chart-2: #3E9B4F;
+  --chart-3: #F76B15;
+  --chart-4: #E5484D;
+  --chart-5: #082C29;
+  --radius: 0.25rem;
+  --sidebar: #F8FAFA;
+  --sidebar-foreground: #082C29;
+  --sidebar-primary: #12A594;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E4EBEB;
+  --sidebar-accent-foreground: #12A594;
+  --sidebar-border: #E4EBEB;
+  --sidebar-ring: #12A594;
+}
+
+.dark {
+  --background: #041614;
+  --foreground: #F8FAFA;
+  --card: #082C29;
+  --card-foreground: #F8FAFA;
+  --popover: #082C29;
+  --popover-foreground: #F8FAFA;
+  --primary: #12A594;
+  --primary-foreground: #FFFFFF;
+  --secondary: #133D3A;
+  --secondary-foreground: #F8FAFA;
+  --muted: #133D3A;
+  --muted-foreground: #8FA6A4;
+  --accent: #133D3A;
+  --accent-foreground: #12A594;
+  --destructive: #E5484D;
+  --destructive-foreground: #FFFFFF;
+  --border: #133D3A;
+  --input: #133D3A;
+  --ring: #12A594;
+  --sidebar: #082C29;
+  --sidebar-foreground: #F8FAFA;
+  --sidebar-primary: #12A594;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #133D3A;
+  --sidebar-accent-foreground: #12A594;
+  --sidebar-border: #133D3A;
+  --sidebar-ring: #12A594;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}

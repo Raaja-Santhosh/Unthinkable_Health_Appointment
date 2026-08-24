@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("PATIENT")
+  phone         String?
+  dateOfBirth   String?
+  gender        String?
+  emergencyContact String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  doctorProfile DoctorProfile?
+  
+  // Relations for appointments
+  patientAppointments Appointment[] @relation("PatientAppointments")
+  doctorAppointments  Appointment[] @relation("DoctorAppointments")
+  
+  // Relations for leaves (only applicable if role is DOCTOR)
+  leaves Leave[]
+
+  doctorSlotHolds SlotHold[] @relation("DoctorSlotHolds")
+  patientSlotHolds SlotHold[] @relation("PatientSlotHolds")
+}
+
+model DoctorProfile {
+  id             String @id @default(cuid())
+  userId         String @unique
+  specialization String
+  workingHours   String   // e.g., JSON string { "monday": ["09:00-17:00"] }
+  slotDuration   Int    // in minutes, e.g., 30
+  qualification  String?
+  bio            String?
+  consultationFee Float?
+  isActive       Boolean @default(true)
+  
+  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Leave {
+  id        String   @id @default(cuid())
+  doctorId  String
+  date      DateTime
+  reason    String?
+  
+  doctor    User     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  patientId     String
+  doctorId      String
+  startTime     DateTime
+  endTime       DateTime
+  status        String            @default("BOOKED")
+  googleEventId String?           // For Google Calendar integration
+  
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  patient       User              @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Cascade)
+  doctor        User              @relation("DoctorAppointments", fields: [doctorId], references: [id], onDelete: Cascade)
+  
+  preVisitSummary  PreVisitSummary?
+  postVisitSummary PostVisitSummary?
+}
+
+model PreVisitSummary {
+  id                 String       @id @default(cuid())
+  appointmentId      String       @unique
+  rawSymptoms        String
+  urgency            String
+  chiefComplaint     String
+  suggestedQuestions String
+  isEmergency        Boolean      @default(false)
+  emergencyMessage   String?
+  
+  appointment        Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model PostVisitSummary {
+  id                     String      @id @default(cuid())
+  appointmentId          String      @unique
+  clinicalNotes          String
+  patientFriendlySummary String
+  medicationSchedule     String?       // JSON string
+  followUpSteps          String        // JSON string
+  
+  appointment            Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}
+
+model SlotHold {
+  id        String   @id @default(cuid())
+  doctorId  String
+  date      String   // YYYY-MM-DD
+  time      String   // HH:mm
+  heldBy    String   // userId of the patient holding the slot
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  doctor    User     @relation("DoctorSlotHolds", fields: [doctorId], references: [id], onDelete: Cascade)
+  holder    User     @relation("PatientSlotHolds", fields: [heldBy], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, date, time])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // e.g. 'APPOINTMENT_CANCELLED', 'LEAVE_CREATED', 'STATUS_CHANGED'
+  entityType  String   // e.g. 'Appointment', 'Leave'
+  entityId    String
+  performedBy String   // userId
+  details     String?  // JSON string with additional context
+  createdAt   DateTime @default(now())
+}

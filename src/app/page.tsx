@@ -1,19 +1,13 @@
-import { auth, signIn, signOut } from "@/auth"
+import { auth } from "@/auth"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
+import { DemoLoginButtons } from "./DemoLoginButtons"
 import { 
   Heartbeat, 
-  UserCheck, 
-  Stethoscope, 
-  ShieldCheck, 
-  CalendarCheck, 
   Sparkle, 
   ClockCountdown, 
-  ArrowRight, 
   WarningCircle, 
-  SignOut,
-  CaretRight,
   MagnifyingGlass
 } from "@phosphor-icons/react/dist/ssr"
 
@@ -52,27 +46,14 @@ export default async function HomePage() {
           <div className="flex items-center gap-3">
             {session?.user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground hidden md:inline">
-                  Signed in as <strong className="text-foreground">{session.user.name}</strong> ({session.user.role})
+                <span className="text-xs text-muted-foreground hidden md:inline">
+                  Logged in as <strong className="text-foreground">{session.user.name || session.user.email}</strong>
                 </span>
-                <Link href={
-                  session.user.role === 'ADMIN' ? '/admin' :
-                  session.user.role === 'DOCTOR' ? '/doctor' : '/patient'
-                }>
-                  <Button size="sm" className="font-medium min-h-[38px]">
-                    Go to {session.user.role.charAt(0) + session.user.role.slice(1).toLowerCase()} Portal
-                    <ArrowRight weight="bold" className="ml-1.5 size-4" />
+                <Link href={session.user.role === 'ADMIN' ? '/admin' : session.user.role === 'DOCTOR' ? '/doctor' : '/patient'}>
+                  <Button size="sm" className="min-h-[38px]">
+                    Go to Portal
                   </Button>
                 </Link>
-                <form action={async () => {
-                  "use server"
-                  await signOut({ redirectTo: "/" })
-                }}>
-                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                    <SignOut weight="bold" className="size-4" />
-                    <span className="sr-only">Sign Out</span>
-                  </Button>
-                </form>
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -92,12 +73,12 @@ export default async function HomePage() {
         </div>
       </header>
 
+      {/* Hero Section */}
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-16 lg:pt-20 lg:pb-24">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary text-secondary-foreground text-xs font-medium rounded border border-border mb-6">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               Synchronized Clinical & Patient Operations
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold tracking-tight text-foreground leading-[1.1]">
@@ -108,7 +89,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Quick Demo Access Bar */}
+          {/* Quick Demo Logins Container */}
           <div className="mt-12 p-6 bg-card border border-border rounded-lg shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
               <div>
@@ -125,94 +106,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              {/* Patient Demo Card */}
-              <div className="border border-border rounded p-5 bg-background hover:border-primary/50 transition-colors flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono font-medium px-2 py-0.5 bg-primary/10 text-primary rounded border border-primary/20">
-                      PATIENT PORTAL
-                    </span>
-                    <Heartbeat className="size-5 text-primary" />
-                  </div>
-                  <h4 className="font-heading font-bold text-base mt-2">Patient Experience</h4>
-                  <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
-                    Search doctors, hold slots with live countdown timers, and complete caring symptom intakes.
-                  </p>
-                </div>
-                <form action={async () => {
-                  "use server"
-                  await signIn("credentials", {
-                    email: "patient@clinic.com",
-                    password: "patient123",
-                    redirectTo: "/patient"
-                  })
-                }}>
-                  <Button type="submit" variant="outline" className="w-full justify-between text-xs min-h-[40px] font-medium">
-                    <span>Enter as John Doe (Patient)</span>
-                    <CaretRight weight="bold" className="size-3.5" />
-                  </Button>
-                </form>
-              </div>
-
-              {/* Doctor Demo Card */}
-              <div className="border border-border rounded p-5 bg-background hover:border-primary/50 transition-colors flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono font-medium px-2 py-0.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded border border-blue-500/20">
-                      DOCTOR PORTAL
-                    </span>
-                    <Stethoscope className="size-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <h4 className="font-heading font-bold text-base mt-2">Clinical Dashboard</h4>
-                  <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
-                    Desktop-first dense view (Linear-style), AI pre-visit urgency flags, and post-visit note generation.
-                  </p>
-                </div>
-                <form action={async () => {
-                  "use server"
-                  await signIn("credentials", {
-                    email: "doctor@clinic.com",
-                    password: "doctor123",
-                    redirectTo: "/doctor"
-                  })
-                }}>
-                  <Button type="submit" variant="outline" className="w-full justify-between text-xs min-h-[40px] font-medium">
-                    <span>Enter as Dr. Sarah Chen (Doctor)</span>
-                    <CaretRight weight="bold" className="size-3.5" />
-                  </Button>
-                </form>
-              </div>
-
-              {/* Admin Demo Card */}
-              <div className="border border-border rounded p-5 bg-background hover:border-primary/50 transition-colors flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-mono font-medium px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded border border-amber-500/20">
-                      ADMIN PORTAL
-                    </span>
-                    <ShieldCheck className="size-5 text-amber-600 dark:text-amber-400" />
-                  </div>
-                  <h4 className="font-heading font-bold text-base mt-2">Operations & Leave</h4>
-                  <p className="text-xs text-muted-foreground mt-1 mb-4 leading-relaxed">
-                    Flat Stripe/Retool table density, doctor onboarding, and automatic booking conflict warning strips.
-                  </p>
-                </div>
-                <form action={async () => {
-                  "use server"
-                  await signIn("credentials", {
-                    email: "admin@clinic.com",
-                    password: "admin123",
-                    redirectTo: "/admin"
-                  })
-                }}>
-                  <Button type="submit" variant="outline" className="w-full justify-between text-xs min-h-[40px] font-medium">
-                    <span>Enter as Clinic Admin</span>
-                    <CaretRight weight="bold" className="size-3.5" />
-                  </Button>
-                </form>
-              </div>
-            </div>
+            <DemoLoginButtons />
           </div>
         </section>
 
@@ -261,14 +155,14 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Architecture & Engineering Standards Section */}
+        {/* Feature Highlights Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24 border-t border-border">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl font-heading font-bold tracking-tight text-foreground">
-              Engineered to PRD & AGENTS.md Specifications
+              Built for Modern Healthcare Delivery
             </h2>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
-              Every portal delivers purposeful UX with tailored density, reliable concurrency management, and structured AI summaries.
+              Every portal delivers clinical workflows with tailored density, reliable concurrency management, and structured AI summaries.
             </p>
           </div>
 
@@ -309,7 +203,7 @@ export default async function HomePage() {
       {/* Footer */}
       <footer className="border-t border-border bg-card py-8 text-center text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4">
-          <p>© 2026 Healthcare Appointment & Follow-up Manager. Compliant with AGENTS.md token system.</p>
+          <p>© 2026 Aegis Care. All rights reserved.</p>
         </div>
       </footer>
     </div>

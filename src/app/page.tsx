@@ -21,11 +21,16 @@ export default async function HomePage() {
   const session = await auth()
 
   // Fetch doctors count and specialties for live preview
-  const doctors = await prisma.user.findMany({
-    where: { role: 'DOCTOR' },
-    include: { doctorProfile: true },
-    take: 4
-  })
+  let doctors: any[] = []
+  try {
+    doctors = await prisma.user.findMany({
+      where: { role: 'DOCTOR' },
+      include: { doctorProfile: true },
+      take: 4
+    })
+  } catch (e) {
+    console.error("Error loading doctors for landing page:", e)
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">

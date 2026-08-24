@@ -2,6 +2,9 @@
 
 > Production-ready, multi-portal healthcare platform featuring concurrency-safe booking, AI-powered pre/post-visit clinical intelligence (Google Gemini 2.5 Flash), automated follow-up reminders, and operational conflict resolution.
 
+**🌐 Live Demo:** [https://unthinkable-health-appointment-3dy2.vercel.app](https://unthinkable-health-appointment-3dy2.vercel.app/)  
+**📁 GitHub Repository:** [https://github.com/Raaja-Santhosh/Unthinkable_Health_Appointment](https://github.com/Raaja-Santhosh/Unthinkable_Health_Appointment)
+
 ---
 
 ## 🚀 Quick Start (Zero-Configuration Demo)
